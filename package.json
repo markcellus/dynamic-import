@@ -16,6 +16,7 @@
     "script-loader",
     "template-loader"
   ],
+  "main": "src/resource-manager.js",
   "author": {
     "name": "Mark Kennedy",
     "url": "http://heyimmark.com"

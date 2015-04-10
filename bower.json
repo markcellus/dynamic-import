@@ -1,0 +1,29 @@
+{
+  "name": "resource-manager-js",
+  "version": "0.0.0",
+  "homepage": "https://github.com/mkay581/resource-manager",
+  "authors": [
+    "Mark Kennedy <mkay581@gmail.com>"
+  ],
+  "description": "Loads and caches all resources needed for a web app including css, templates, and scripts",
+  "moduleType": [
+    "amd",
+    "es6",
+    "node"
+  ],
+  "keywords": [
+    "resources",
+    "resource-manager",
+    "css-loader",
+    "script-loader",
+    "template-loader"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

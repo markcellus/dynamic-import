@@ -1,0 +1,23 @@
+{
+  "name": "resource-manager-js",
+  "version": "0.0.0",
+  "description": "Loads and caches all resources needed for a web app including css, templates, and scripts",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mkay581/resource-manager.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "resources",
+    "resource-manager",
+    "css-loader",
+    "script-loader",
+    "template-loader"
+  ],
+  "author": {
+    "name": "Mark Kennedy",
+    "url": "http://heyimmark.com"
+  }
+}

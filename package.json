@@ -19,5 +19,11 @@
   "author": {
     "name": "Mark Kennedy",
     "url": "http://heyimmark.com"
+  },
+  "dependencies": {
+    "promise": "^7.0.0"
+  },
+  "devDependencies": {
+    "build-tools": "^1.2.7"
   }
 }

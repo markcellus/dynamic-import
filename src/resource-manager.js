@@ -1,4 +1,5 @@
 var Promise = require('promise');
+var $ = require('jquery');
 
 /**
  * Custom request function (work in progress).
@@ -57,6 +58,7 @@ ResourceManager.prototype = {
         this._head = document.getElementsByTagName('head')[0];
         this._cssPaths = {};
         this._scriptPaths = {};
+        this._dataPromises = {};
     },
 
     /**
@@ -113,6 +115,28 @@ ResourceManager.prototype = {
      */
     createScriptElement: function () {
         return document.createElement('script');
+    },
+
+    /**
+     * Makes a request to get data and caches it.
+     * @param {string} url - The url to fetch data from
+     * @param [options] - ajax options
+     * @returns {*}
+     */
+    fetchData: function (url, options) {
+        var cacheId;
+        options = options || {};
+        
+        cacheId = url + JSON.stringify(options);
+
+        if (this._dataPromises[cacheId]) {
+            return this._dataPromises[cacheId];
+        } else {
+            this._dataPromises[cacheId] = new Promise(function (resolve, reject) {
+                $.ajax(url, options).done(resolve).fail(reject);
+            }.bind(this));
+            return this._dataPromises[cacheId];
+        }
     },
 
     /**
@@ -207,6 +231,7 @@ ResourceManager.prototype = {
         this._cssPaths = {};
         this.unloadScript(Object.getOwnPropertyNames(this._scriptPaths));
         this._scriptPaths = {};
+        this._dataPromises = {};
         this._loadScriptPromise = null;
     }
 

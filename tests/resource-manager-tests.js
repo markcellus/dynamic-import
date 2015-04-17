@@ -1,14 +1,14 @@
 var sinon = require('sinon');
 var TestUtils = require('test-utils');
 var assert = require('assert');
+var $ = require('jquery');
 
 
 describe('Resource Manager', function () {
 
     it('should load and unload multiple css files', function (done) {
-        var ResourceManager = require('resource-manager');
+        var ResourceManager = require('../src/resource-manager');
         var cssPaths = ['test/path/to/css/one', 'test/path/to/second/css'];
-        var request = require('./../src/request');
         ResourceManager.loadCss(cssPaths).then(function () {
             var head = document.getElementsByTagName('head')[0];
             assert.equal(head.querySelectorAll('link[href="' + cssPaths[0] + '"]').length, 1, 'calling loadCss() with new css files loads first css path in the head of the document');
@@ -24,7 +24,7 @@ describe('Resource Manager', function () {
 
     it('should add and remove css file from DOM appropriately', function (done) {
         var path = 'test/path/to/css/single.css';
-        var ResourceManager = require('resource-manager');
+        var ResourceManager = require('../src/resource-manager');
         ResourceManager.loadCss(path).then(function () {
             var head = document.getElementsByTagName('head')[0];
             assert.equal(head.querySelectorAll('link[href="' + path + '"]').length, 1, 'calling loadCss(), adds css in the head of the document');
@@ -39,7 +39,7 @@ describe('Resource Manager', function () {
     it('should NOT load css files that have already been loaded', function (done) {
         var cssPaths = ['test/path/to/css/one', 'test/path/to/second/css'];
         var head = document.getElementsByTagName('head')[0];
-        var ResourceManager = require('resource-manager');
+        var ResourceManager = require('../src/resource-manager');
         ResourceManager.loadCss(cssPaths).then(function () {
             assert.equal(head.querySelectorAll('link[href="' + cssPaths[0] + '"]').length, 1, 'on first loadCss() call, first file gets added to the head of the document once');
             assert.equal(head.querySelectorAll('link[href="' + cssPaths[1] + '"]').length, 1, 'second file gets added to the head of the document once');
@@ -57,7 +57,7 @@ describe('Resource Manager', function () {
 
     it('does not crash when nothing is passed to loadCss()', function (done) {
         var head = document.getElementsByTagName('head')[0];
-        var ResourceManager = require('resource-manager');
+        var ResourceManager = require('../src/resource-manager');
         ResourceManager.loadCss().then(function () {
             assert.ok(true, 'no crash');
             ResourceManager.flush();
@@ -67,7 +67,7 @@ describe('Resource Manager', function () {
 
     it('does not crash when nothing is passed to loadTemplate()', function (done) {
         var head = document.getElementsByTagName('head')[0];
-        var ResourceManager = require('resource-manager');
+        var ResourceManager = require('../src/resource-manager');
         ResourceManager.loadTemplate().then(function () {
             assert.ok(true, 'no crash');
             ResourceManager.flush();
@@ -79,7 +79,7 @@ describe('Resource Manager', function () {
         var path = 'path/to/my.js';
         var head = document.getElementsByTagName('head')[0];
         var scriptEl = document.createElement('script');
-        var ResourceManager = require('resource-manager');
+        var ResourceManager = require('../src/resource-manager');
         var createScriptElementStub = sinon.stub(ResourceManager, 'createScriptElement').returns(scriptEl);
         sinon.stub(scriptEl, 'addEventListener').callsArg(1);
         ResourceManager.loadScript(path).then(function () {
@@ -101,7 +101,7 @@ describe('Resource Manager', function () {
         var head = document.getElementsByTagName('head')[0];
         var firstScriptEl = document.createElement('script');
         var secondScriptEl = document.createElement('script');
-        var ResourceManager = require('resource-manager');
+        var ResourceManager = require('../src/resource-manager');
         var createScriptElementStub = sinon.stub(ResourceManager, 'createScriptElement');
         createScriptElementStub.onFirstCall().returns(firstScriptEl);
         createScriptElementStub.onSecondCall().returns(secondScriptEl);
@@ -130,10 +130,39 @@ describe('Resource Manager', function () {
         });
     });
 
+    it('fetchData should make ajax request with correct arguments', function () {
+        var path = 'test/path/to/css/single';
+        var ajaxStub = sinon.stub($, 'ajax').returns($.Deferred().resolve());
+        var ResourceManager = require('../src/resource-manager');
+        var options = {my: 'opts'};
+        return ResourceManager.fetchData(path, options).then(function () {
+            assert.deepEqual(ajaxStub.args[0], [path, options], 'ajax was called with correct arguments');
+            ajaxStub.restore();
+            ResourceManager.flush();
+        });
+    });
+
+    it('fetchData should not make another request after previous if has same options as previous, but still return same data', function () {
+        var path = 'test/path/to/css/single';
+        var mockData = {heres: 'my data'};
+        var ajaxStub = sinon.stub($, 'ajax').returns($.Deferred().resolve(mockData));
+        var ResourceManager = require('../src/resource-manager');
+        var options = {opts: 'same'};
+        return ResourceManager.fetchData(path, options).then(function (data) {
+            assert.deepEqual(data, mockData, 'correct mock data was returned on first call');
+            return ResourceManager.fetchData(path, options).then(function (data) {
+                assert.deepEqual(ajaxStub.callCount, 1, 'ajax called was only made once');
+                assert.deepEqual(data, mockData, 'second call returned correct data');
+                ajaxStub.restore();
+                ResourceManager.flush();
+            });
+        });
+    });
+
     //it('loading a template file', function (done) {
     //    QUnit.expect(3);
     //    var path = 'path/to/template.html';
-    //    var ResourceManager = require('resource-manager');
+    //    var ResourceManager = require('../src/resource-manager');
     //    var server = sinon.fakeServer.create();
     //    ResourceManager.loadTemplate(path).then(function () {
     //        ResourceManager.flush();

@@ -142,17 +142,43 @@ describe('Resource Manager', function () {
         });
     });
 
-    it('fetchData should not make another request after previous if has same options as previous, but still return same data', function () {
+    it('setting cache option to true will return the same response as previous requests but will not make the same ajax call', function () {
         var path = 'test/path/to/css/single';
         var mockData = {heres: 'my data'};
         var ajaxStub = sinon.stub($, 'ajax').returns($.Deferred().resolve(mockData));
         var ResourceManager = require('../src/resource-manager');
-        var options = {opts: 'same'};
+        var options = {opts: 'same', cache: true};
         return ResourceManager.fetchData(path, options).then(function (data) {
             assert.deepEqual(data, mockData, 'correct mock data was returned on first call');
             return ResourceManager.fetchData(path, options).then(function (data) {
                 assert.deepEqual(ajaxStub.callCount, 1, 'ajax called was only made once');
                 assert.deepEqual(data, mockData, 'second call returned correct data');
+                ajaxStub.restore();
+                ResourceManager.flush();
+            });
+        });
+    });
+
+    it('passing no parameters to fetch data will not make an ajax call and resolve promise immediately', function () {
+        var path = 'test/path/to/css/single';
+        var ajaxStub = sinon.stub($, 'ajax').returns($.Deferred().resolve());
+        var ResourceManager = require('../src/resource-manager');
+        return ResourceManager.fetchData().then(function () {
+            assert.equal(ajaxStub.callCount, 0, 'ajax was NOT called');
+            ajaxStub.restore();
+            ResourceManager.flush();
+        });
+    });
+
+    it('calling fetchData() for a second time with the same options as previous after the first failure should perform an ajax request again', function () {
+        var path = 'test/path/to/css/single';
+        var ajaxStub = sinon.stub($, 'ajax').returns($.Deferred().reject());
+        var ResourceManager = require('../src/resource-manager');
+        var options = {opts: 'same'};
+        return ResourceManager.fetchData(path, options).catch(function () {
+            assert.equal(ajaxStub.callCount, 1, 'ajax was called');
+            return ResourceManager.fetchData(path, options).catch(function () {
+                assert.equal(ajaxStub.callCount, 2, 'ajax was called again after first request failed');
                 ajaxStub.restore();
                 ResourceManager.flush();
             });

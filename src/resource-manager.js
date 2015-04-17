@@ -124,18 +124,25 @@ ResourceManager.prototype = {
      * @returns {*}
      */
     fetchData: function (url, options) {
-        var cacheId;
-        options = options || {};
-        
-        cacheId = url + JSON.stringify(options);
+        var objId = options ? JSON.stringify(options) : '',
+            cacheId = url + objId;
 
-        if (this._dataPromises[cacheId]) {
+        options = options || {};
+
+        if (!url) {
+            return Promise.resolve();
+        } else if (this._dataPromises[cacheId]) {
             return this._dataPromises[cacheId];
         } else {
             this._dataPromises[cacheId] = new Promise(function (resolve, reject) {
                 $.ajax(url, options).done(resolve).fail(reject);
             }.bind(this));
-            return this._dataPromises[cacheId];
+            return this._dataPromises[cacheId].catch(function () {
+                    // if failure, remove cache so that subsequent
+                    // requests will trigger new ajax call
+                    this._dataPromises[cacheId] = null;
+                    reject(new Error('ResourceManager Failure: request for data at ' + url + ' failed.'));
+            }.bind(this));
         }
     },
 

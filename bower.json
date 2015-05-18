@@ -11,6 +11,7 @@
     "es6",
     "node"
   ],
+  "main": "src/resource-manager.js",
   "keywords": [
     "resources",
     "resource-manager",

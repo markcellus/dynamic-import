@@ -1,6 +1,6 @@
 {
   "name": "resource-manager-js",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "homepage": "https://github.com/mkay581/resource-manager",
   "authors": [
     "Mark Kennedy <mkay581@gmail.com>"
@@ -11,6 +11,7 @@
     "es6",
     "node"
   ],
+  "main": "src/resource-manager.js",
   "keywords": [
     "resources",
     "resource-manager",
@@ -27,6 +28,7 @@
     "tests"
   ],
   "dependencies": {
-    "promise": "~0.2.2"
+    "promise": "~0.2.2",
+    "underscore": "~1.8.3"
   }
 }

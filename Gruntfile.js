@@ -10,7 +10,7 @@ module.exports = function(grunt) {
                     'dist/resource-manager.js': ['src/resource-manager.js']
                 },
                 browserifyOptions: {
-                    standalone: 'RouteManager'
+                    standalone: 'ResourceManager'
                 }
             },
             min: {

@@ -1,5 +1,6 @@
 var Promise = require('promise');
 var $ = require('jquery');
+var _ = require('underscore');
 
 /**
  * Custom request function (work in progress).
@@ -57,7 +58,7 @@ ResourceManager.prototype = {
     initialize: function () {
         this._head = document.getElementsByTagName('head')[0];
         this._cssPaths = {};
-        this._scriptPaths = {};
+        this._scriptMaps = {};
         this._dataPromises = {};
     },
 
@@ -65,28 +66,28 @@ ResourceManager.prototype = {
      * Loads a javascript file.
      * @param {string|Array} paths - The path to the view's js file
      * @memberOf ResourceManager
-     * @return {Promise}
+     * @return {Promise} Returns a promise that resolves when all scripts have been loaded
      */
     loadScript: function (paths) {
-        var script;
-        if (!this._loadScriptPromise) {
-            this._loadScriptPromise = new Promise(function (resolve) {
-                paths = this._ensurePathArray(paths);
-                paths.forEach(function (path) {
-                    if (!this._scriptPaths[path]) {
-                        this._scriptPaths[path] = path;
-                        script = this.createScriptElement();
-                        script.setAttribute('type','text/javascript');
-                        script.src = path;
-                        script.addEventListener('load', resolve);
-                        this._head.appendChild(script);
-                    }
+        var script,
+            map,
+            loadPromises = [];
+        paths = this._ensurePathArray(paths);
+        paths.forEach(function (path) {
+            map = this._scriptMaps[path] = this._scriptMaps[path] || {};
+            if (!map.promise) {
+                map.path = path;
+                map.promise = new Promise(function (resolve) {
+                    script = this.createScriptElement();
+                    script.setAttribute('type','text/javascript');
+                    script.src = path;
+                    script.addEventListener('load', resolve);
+                    this._head.appendChild(script);
                 }.bind(this));
-            }.bind(this));
-        } else {
-            this._loadScriptPromise = Promise.resolve();
-        }
-        return this._loadScriptPromise;
+            }
+            loadPromises.push(map.promise);
+        }.bind(this));
+        return Promise.all(loadPromises);
     },
 
     /**
@@ -102,7 +103,7 @@ ResourceManager.prototype = {
                 file = this._head.querySelectorAll('script[src="' + path + '"]')[0];
                 if (file) {
                     this._head.removeChild(file);
-                    this._scriptPaths[path] = null;
+                    delete this._scriptMaps[path];
                 }
             }.bind(this));
             resolve();
@@ -236,8 +237,10 @@ ResourceManager.prototype = {
     flush: function () {
         this.unloadCss(Object.getOwnPropertyNames(this._cssPaths));
         this._cssPaths = {};
-        this.unloadScript(Object.getOwnPropertyNames(this._scriptPaths));
-        this._scriptPaths = {};
+        _.each(this._scriptMaps, function (map) {
+            this.unloadScript(map.path);
+        }.bind(this));
+        this._scriptMaps = {};
         this._dataPromises = {};
         this._loadScriptPromise = null;
     }

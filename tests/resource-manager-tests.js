@@ -185,6 +185,24 @@ describe('Resource Manager', function () {
         });
     });
 
+    it('making a consecutive script request before previous one finishes loads correctly', function () {
+        var firstPath = 'path/to/my/first/file.js';
+        var secondPath = 'path/to/my/second/file.js';
+        var head = document.getElementsByTagName('head')[0];
+        var firstScriptEl = document.createElement('script');
+        var secondScriptEl = document.createElement('script');
+        var ResourceManager = require('../src/resource-manager');
+        var createScriptElementStub = sinon.stub(ResourceManager, 'createScriptElement');
+        createScriptElementStub.onFirstCall().returns(firstScriptEl);
+        createScriptElementStub.onSecondCall().returns(secondScriptEl);
+        ResourceManager.loadScript(firstPath);
+        ResourceManager.loadScript(secondPath);
+        assert.equal(head.querySelectorAll('script[src="' + firstPath + '"]').length, 1, 'on first loadScript() call, first file gets added to the head of the document once');
+        assert.equal(head.querySelectorAll('script[src="' + secondPath + '"]').length, 1, 'second file gets added to the head of the document once');
+        ResourceManager.flush();
+        createScriptElementStub.restore();
+    });
+
     //it('loading a template file', function (done) {
     //    QUnit.expect(3);
     //    var path = 'path/to/template.html';

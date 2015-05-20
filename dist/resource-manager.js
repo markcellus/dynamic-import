@@ -1,5 +1,5 @@
 /** 
-* resource-manager-js - v1.1.2.
+* resource-manager-js - v1.1.3.
 * git://github.com/mkay581/resource-manager.git
 * Copyright 2015 Mark Kennedy. Licensed MIT.
 */
@@ -12120,13 +12120,14 @@ ResourceManager.prototype = {
             return this._dataPromises[cacheId];
         } else {
             this._dataPromises[cacheId] = new Promise(function (resolve, reject) {
-                $.ajax(url, options).done(resolve).fail(reject);
+                $.ajax(url, options).done(resolve).fail(function () {
+                    reject(new Error('ResourceManager Failure: request for data at ' + url + ' failed.'));
+                }.bind(this));
             }.bind(this));
             return this._dataPromises[cacheId].catch(function () {
-                    // if failure, remove cache so that subsequent
-                    // requests will trigger new ajax call
-                    this._dataPromises[cacheId] = null;
-                    reject(new Error('ResourceManager Failure: request for data at ' + url + ' failed.'));
+                // if failure, remove cache so that subsequent
+                // requests will trigger new ajax call
+                this._dataPromises[cacheId] = null;
             }.bind(this));
         }
     },

@@ -170,17 +170,18 @@ describe('Resource Manager', function () {
         });
     });
 
-    it('calling fetchData() for a second time with the same options as previous after the first failure should perform an ajax request again', function () {
+    it('calling fetchData() for a second time with the same options as previous after the first failure should perform an ajax request again', function (done) {
         var path = 'test/path/to/css/single';
         var ajaxStub = sinon.stub($, 'ajax').returns($.Deferred().reject());
         var ResourceManager = require('../src/resource-manager');
         var options = {opts: 'same'};
-        return ResourceManager.fetchData(path, options).catch(function () {
+        ResourceManager.fetchData(path, options).catch(function () {
             assert.equal(ajaxStub.callCount, 1, 'ajax was called');
-            return ResourceManager.fetchData(path, options).catch(function () {
+            ResourceManager.fetchData(path, options).catch(function () {
                 assert.equal(ajaxStub.callCount, 2, 'ajax was called again after first request failed');
                 ajaxStub.restore();
                 ResourceManager.flush();
+                done();
             });
         });
     });
@@ -201,6 +202,20 @@ describe('Resource Manager', function () {
         assert.equal(head.querySelectorAll('script[src="' + secondPath + '"]').length, 1, 'second file gets added to the head of the document once');
         ResourceManager.flush();
         createScriptElementStub.restore();
+    });
+
+    it('should reject fetchData() when there is an request failure', function () {
+        var path = 'test/path/to/css/single';
+        var errorObj = {my: 'error'};
+        var ajaxStub = sinon.stub($, 'ajax').returns($.Deferred().rejectWith(this, [null, null, errorObj]));
+        var ResourceManager = require('../src/resource-manager');
+        var options = {opts: 'same'};
+        return ResourceManager.fetchData(path, options)
+            .catch(function (e) {
+                assert.deepEqual(e, errorObj);
+                ajaxStub.restore();
+                ResourceManager.flush();
+            });
     });
 
     //it('loading a template file', function (done) {

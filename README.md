@@ -18,7 +18,7 @@ ResourceManager.loadCss(cssPaths).then(function () {
 
 ### Load JavaScript files
 
-You can load script files dynamically by calling the `loadScript()`` method. When called, the supplied script
+You can load script files dynamically by calling the `loadScript()` method. When called, the supplied script
 will be loaded into the `<head>` of the DOM and run immediately.
 
 ```javascript

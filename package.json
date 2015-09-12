@@ -12,10 +12,19 @@
   "keywords": [
     "resources",
     "resource-manager",
-    "css-loader",
-    "script-loader",
-    "template-loader"
+    "css loader",
+    "js loader",
+    "script loader",
+    "html loader",
+    "file loader",
+    "css file",
+    "js file",
+    "caching"
   ],
+  "scripts": {
+    "test": "grunt bt:test"
+  },
+  "license": "MIT",
   "main": "src/resource-manager.js",
   "author": {
     "name": "Mark Kennedy",
@@ -27,6 +36,9 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "build-tools": "^1.5.0"
+    "build-tools": "^1.6.0",
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "sinon": "^1.16.1"
   }
 }

@@ -15,9 +15,14 @@
   "keywords": [
     "resources",
     "resource-manager",
-    "css-loader",
-    "script-loader",
-    "template-loader"
+    "css loader",
+    "js loader",
+    "script loader",
+    "html loader",
+    "file loader",
+    "css file",
+    "js file",
+    "caching"
   ],
   "license": "MIT",
   "ignore": [

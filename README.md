@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mkay581/resource-manager.svg?branch=master)](https://travis-ci.org/mkay581/resource-manager)
+
 # Resource Manager
 
 A library that loads and caches files (and their contents) on-the-fly. Which is extremely helpful when preloading files

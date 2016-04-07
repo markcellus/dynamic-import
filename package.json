@@ -31,7 +31,6 @@
     "url": "http://heyimmark.com"
   },
   "dependencies": {
-    "jquery": "^2.2.3",
     "lodash": "^4.8.2",
     "promise": "^7.1.1"
   },

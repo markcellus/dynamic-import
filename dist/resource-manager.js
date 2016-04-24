@@ -1,5 +1,5 @@
 /** 
-* resource-manager-js - v2.0.0.
+* resource-manager-js - v2.0.1.
 * git://github.com/mkay581/resource-manager.git
 * Copyright 2016 Mark Kennedy. Licensed MIT.
 */
@@ -16924,6 +16924,9 @@ var ResourceManager = function () {
             if (!this._dataPromises[cacheId]) {
                 this._dataPromises[cacheId] = fetch(url, reqOptions).then(function (resp) {
                     // convert response to json
+                    if (resp.status === 401) {
+                        throw new Error("Unauthorized");
+                    }
                     return resp.json();
                 }).catch(function (e) {
                     // if failure, remove cache so that subsequent

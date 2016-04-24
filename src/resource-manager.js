@@ -110,6 +110,9 @@ class ResourceManager {
             this._dataPromises[cacheId] = fetch(url, reqOptions)
                 .then((resp) => {
                     // convert response to json
+                    if (resp.status === 401) {
+                        throw new Error("Unauthorized");
+                    }
                     return resp.json();
                 }).catch((e) => {
                     // if failure, remove cache so that subsequent

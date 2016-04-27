@@ -1,5 +1,5 @@
 /** 
-* resource-manager-js - v2.0.2.
+* resource-manager-js - v2.0.3.
 * git://github.com/mkay581/resource-manager.git
 * Copyright 2016 Mark Kennedy. Licensed MIT.
 */
@@ -16929,7 +16929,9 @@ var ResourceManager = function () {
                     if (resp.status === 401) {
                         throw new Error("Unauthorized");
                     }
-                    if (resp.bodyUsed) {
+                    // assuming JSON for now
+                    // TODO: Maybe update to support all types of responses?
+                    if (resp.body) {
                         return resp.json();
                     }
                 }).catch(function (e) {

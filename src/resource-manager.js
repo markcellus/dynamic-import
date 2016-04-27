@@ -96,17 +96,17 @@ class ResourceManager {
      * @param [reqOptions] - options to be passed to fetch call
      * @returns {*}
      */
-    fetchData (url, reqOptions) {
+    fetchData (url, reqOptions = {}) {
         // TODO: keeping track of cache (objId) below can better be done using WeakMaps
         var objId = reqOptions ? JSON.stringify(reqOptions) : '',
             cacheId = url + objId;
 
-        reqOptions = reqOptions || {};
+        reqOptions.cache = reqOptions.cache === undefined ? true : reqOptions.cache;
 
         if (!url) {
             return Promise.resolve();
         }
-        if (!this._dataPromises[cacheId]) {
+        if (!this._dataPromises[cacheId] || !reqOptions.cache) {
             this._dataPromises[cacheId] = fetch(url, reqOptions)
                 .then((resp) => {
                     // convert response to json

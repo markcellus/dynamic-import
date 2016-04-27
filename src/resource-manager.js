@@ -113,7 +113,9 @@ class ResourceManager {
                     if (resp.status === 401) {
                         throw new Error("Unauthorized");
                     }
-                    return resp.json();
+                    if (resp.bodyUsed) {
+                        return resp.json();
+                    }
                 }).catch((e) => {
                     // if failure, remove cache so that subsequent
                     // requests will trigger new ajax call

@@ -148,7 +148,7 @@ describe('Resource Manager', function () {
     it('fetchData should make fetch request with correct options and return fetched data object', function () {
         var path = 'test/path/to/css/single';
         var respObj = {my: 'response text'};
-        var serverResp = {json: sinon.stub().returns(Promise.resolve(respObj)), bodyUsed: true};
+        var serverResp = {json: sinon.stub().returns(Promise.resolve(respObj)), body: true};
         window.fetch.returns(Promise.resolve(serverResp));
         var ResourceManager = require('../src/resource-manager');
         var options = {my: 'opts'};
@@ -175,7 +175,7 @@ describe('Resource Manager', function () {
     it('setting cache option to true will return the same response as previous requests and will not make additional fetch call', function () {
         var path = 'test/path/to/css/single';
         var mockData = {heres: 'my data'};
-        var resp = {json: sinon.stub().returns(mockData), bodyUsed: true};
+        var resp = {json: sinon.stub().returns(mockData), body: true};
         window.fetch.returns(Promise.resolve(resp));
         var ResourceManager = require('../src/resource-manager');
         var options = {opts: 'same', cache: true};
@@ -192,7 +192,7 @@ describe('Resource Manager', function () {
     it('setting cache option to false will make fetch call always, even if the request is the same as previous ones', function () {
         var path = 'test/path/to/css/single';
         var mockData = {heres: 'my data'};
-        var resp = {json: sinon.stub().returns(mockData), bodyUsed: true};
+        var resp = {json: sinon.stub().returns(mockData), body: true};
         window.fetch.returns(Promise.resolve(resp));
         var ResourceManager = require('../src/resource-manager');
         var options = {opts: 'same', cache: false};

@@ -113,7 +113,9 @@ class ResourceManager {
                     if (resp.status === 401) {
                         throw new Error("Unauthorized");
                     }
-                    if (resp.bodyUsed) {
+                    // assuming JSON for now
+                    // TODO: Maybe update to support all types of responses?
+                    if (resp.body) {
                         return resp.json();
                     }
                 }).catch((e) => {

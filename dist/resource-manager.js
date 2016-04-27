@@ -1,5 +1,5 @@
 /** 
-* resource-manager-js - v2.0.1.
+* resource-manager-js - v2.0.2.
 * git://github.com/mkay581/resource-manager.git
 * Copyright 2016 Mark Kennedy. Licensed MIT.
 */
@@ -16909,25 +16909,29 @@ var ResourceManager = function () {
 
     }, {
         key: 'fetchData',
-        value: function fetchData(url, reqOptions) {
+        value: function fetchData(url) {
             var _this = this;
+
+            var reqOptions = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
             // TODO: keeping track of cache (objId) below can better be done using WeakMaps
             var objId = reqOptions ? JSON.stringify(reqOptions) : '',
                 cacheId = url + objId;
 
-            reqOptions = reqOptions || {};
+            reqOptions.cache = reqOptions.cache === undefined ? true : reqOptions.cache;
 
             if (!url) {
                 return _promise2.default.resolve();
             }
-            if (!this._dataPromises[cacheId]) {
+            if (!this._dataPromises[cacheId] || !reqOptions.cache) {
                 this._dataPromises[cacheId] = fetch(url, reqOptions).then(function (resp) {
                     // convert response to json
                     if (resp.status === 401) {
                         throw new Error("Unauthorized");
                     }
-                    return resp.json();
+                    if (resp.bodyUsed) {
+                        return resp.json();
+                    }
                 }).catch(function (e) {
                     // if failure, remove cache so that subsequent
                     // requests will trigger new ajax call

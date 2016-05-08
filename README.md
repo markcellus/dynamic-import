@@ -5,6 +5,9 @@
 A library that loads and caches files (and their contents) on-the-fly. Which is extremely helpful when preloading files
 in a browser, for instance. All different file types are supported including CSS, JavaScript, and HTML templates.
 
+Note that this package is transpiled using [Babel](https://github.com/babel/babel) and conforms to the [ECMAScript 6](http://es6-features.org/)
+standard, allowing it to utilize [fetch](https://fetch.spec.whatwg.org/) calls to make its requests.
+
 
 ## Usage
 

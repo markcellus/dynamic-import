@@ -1,7 +1,6 @@
 'use strict';
 import Promise from 'promise';
 import _ from 'lodash';
-
 /**
  * Makes sure that a path is converted to an array.
  * @param paths
@@ -97,9 +96,7 @@ class ResourceManager {
      * @returns {*}
      */
     fetchData (url, reqOptions = {}) {
-        // TODO: keeping track of cache (objId) below can better be done using WeakMaps
-        var objId = reqOptions ? JSON.stringify(reqOptions) : '',
-            cacheId = url + objId;
+        var cacheId = url + JSON.stringify(reqOptions);
 
         reqOptions.cache = reqOptions.cache === undefined ? true : reqOptions.cache;
 

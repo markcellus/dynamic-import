@@ -147,43 +147,28 @@ describe('Resource Manager', function () {
 
     it('fetchData should make fetch request with correct options and return fetched data object', function () {
         var path = 'test/path/to/css/single';
-        var respObj = {my: 'response text'};
-        var serverResp = {json: sinon.stub().returns(Promise.resolve(respObj)), body: true};
+        var serverResp = {json: sinon.stub().returns(Promise.resolve()), body: true};
         window.fetch.returns(Promise.resolve(serverResp));
         var ResourceManager = require('../src/resource-manager');
         var options = {my: 'opts'};
         return ResourceManager.fetchData(path, options).then(function (resp) {
             assert.deepEqual(window.fetch.args[0], [path, options]);
-            assert.deepEqual(resp, respObj);
+            assert.deepEqual(resp, serverResp);
             ResourceManager.flush();
-        });
-    });
-
-    it('fetchData should reject promise with an error object of unauthorized if the status is 401', function (done) {
-        var path = 'test/path/to/css/single';
-        var serverResp = {status: 401};
-        window.fetch.returns(Promise.resolve(serverResp));
-        var ResourceManager = require('../src/resource-manager');
-        var options = {my: 'opts'};
-        ResourceManager.fetchData(path, options).catch(function (err) {
-            assert.equal(err.message, 'Unauthorized');
-            ResourceManager.flush();
-            done();
         });
     });
 
     it('setting cache option to true will return the same response as previous requests and will not make additional fetch call', function () {
         var path = 'test/path/to/css/single';
-        var mockData = {heres: 'my data'};
-        var resp = {json: sinon.stub().returns(mockData), body: true};
+        var resp = {json: sinon.stub().returns(Promise.resolve()), body: true};
         window.fetch.returns(Promise.resolve(resp));
         var ResourceManager = require('../src/resource-manager');
         var options = {opts: 'same', cache: true};
         return ResourceManager.fetchData(path, options).then(function (data) {
-            assert.deepEqual(data, mockData, 'correct mock data was returned on first call');
+            assert.deepEqual(data, resp, 'correct mock data was returned on first call');
             return ResourceManager.fetchData(path, options).then(function (data) {
                 assert.deepEqual(window.fetch.callCount, 1, 'fetch called was only made once');
-                assert.deepEqual(data, mockData, 'second call returned correct data');
+                assert.deepEqual(data, resp, 'second call returned correct data');
                 ResourceManager.flush();
             });
         });

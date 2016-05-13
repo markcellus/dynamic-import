@@ -105,17 +105,7 @@ class ResourceManager {
         }
         if (!this._dataPromises[cacheId] || !reqOptions.cache) {
             this._dataPromises[cacheId] = fetch(url, reqOptions)
-                .then((resp) => {
-                    // convert response to json
-                    if (resp.status === 401) {
-                        throw new Error("Unauthorized");
-                    }
-                    // assuming JSON for now
-                    // TODO: Maybe update to support all types of responses?
-                    if (resp.body) {
-                        return resp.json();
-                    }
-                }).catch((e) => {
+                .catch((e) => {
                     // if failure, remove cache so that subsequent
                     // requests will trigger new ajax call
                     this._dataPromises[cacheId] = null;

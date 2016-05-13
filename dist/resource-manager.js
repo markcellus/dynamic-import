@@ -1,5 +1,5 @@
 /** 
-* resource-manager-js - v2.1.1.
+* resource-manager-js - v2.2.0.
 * git://github.com/mkay581/resource-manager.git
 * Copyright 2016 Mark Kennedy. Licensed MIT.
 */
@@ -17251,17 +17251,7 @@ var ResourceManager = function () {
                 return _promise2.default.resolve();
             }
             if (!this._dataPromises[cacheId] || !reqOptions.cache) {
-                this._dataPromises[cacheId] = fetch(url, reqOptions).then(function (resp) {
-                    // convert response to json
-                    if (resp.status === 401) {
-                        throw new Error("Unauthorized");
-                    }
-                    // assuming JSON for now
-                    // TODO: Maybe update to support all types of responses?
-                    if (resp.body) {
-                        return resp.json();
-                    }
-                }).catch(function (e) {
+                this._dataPromises[cacheId] = fetch(url, reqOptions).catch(function (e) {
                     // if failure, remove cache so that subsequent
                     // requests will trigger new ajax call
                     _this._dataPromises[cacheId] = null;

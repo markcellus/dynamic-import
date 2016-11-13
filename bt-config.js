@@ -6,14 +6,6 @@ var transforms = [
             "presets": [
                 "es2015"
             ],
-            "plugins": [
-                [
-                    "transform-runtime",
-                    {
-                        "polyfill": true
-                    }
-                ]
-            ]
         }
     ]
 ];

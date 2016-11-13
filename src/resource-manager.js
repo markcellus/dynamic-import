@@ -1,4 +1,6 @@
 'use strict';
+require('es6-promise').polyfill(); // needed for fetch
+import 'whatwg-fetch';
 /**
  * Makes sure that a path is converted to an array.
  * @param paths

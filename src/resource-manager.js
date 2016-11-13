@@ -1,6 +1,4 @@
 'use strict';
-import Promise from 'promise';
-import _ from 'lodash';
 /**
  * Makes sure that a path is converted to an array.
  * @param paths
@@ -190,9 +188,12 @@ class ResourceManager {
     flush () {
         this.unloadCss(Object.getOwnPropertyNames(this._cssPaths));
         this._cssPaths = {};
-        _.each(this._scriptMaps, function (map) {
-            this.unloadScript(map.path);
-        }.bind(this));
+        for (let s in this._scriptMaps) {
+            if (this._scriptMaps.hasOwnProperty(s)) {
+                let map = this._scriptMaps[s];
+                this.unloadScript(map.path);
+            }
+        }
         this._scriptMaps = {};
         this._dataPromises = {};
     }

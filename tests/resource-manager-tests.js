@@ -1,7 +1,6 @@
 "use strict";
 var sinon = require('sinon');
 var assert = require('assert');
-var Promise = require('promise');
 
 describe('Resource Manager', function () {
     var origWindowFetch;

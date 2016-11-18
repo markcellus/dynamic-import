@@ -25,7 +25,7 @@
     "test": "bt test"
   },
   "license": "MIT",
-  "main": "./dist/resource-manager.js",
+  "main": "./src/resource-manager.js",
   "author": {
     "name": "Mark Kennedy",
     "url": "http://heyimmark.com"
@@ -40,5 +40,17 @@
   "dependencies": {
     "es6-promise": "^4.0.5",
     "whatwg-fetch": "^1.0.0"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
+    ]
   }
 }

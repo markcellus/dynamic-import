@@ -1,14 +1,4 @@
 'use strict';
-var transforms = [
-    [
-        "babelify",
-        {
-            "presets": [
-                "es2015"
-            ],
-        }
-    ]
-];
 module.exports = {
     dist: 'dist',
     build: {
@@ -16,8 +6,7 @@ module.exports = {
             'dist/resource-manager.js': ['src/resource-manager.js']
         },
         browserifyOptions: {
-            standalone: 'ResourceManager',
-            transform: transforms,
+            standalone: 'ResourceManager'
         },
         minifyFiles: {
             'dist/resource-manager-min.js': ['dist/resource-manager.js']
@@ -28,8 +17,5 @@ module.exports = {
         mocha: {
             src: ['tests/*.js']
         },
-        browserifyOptions: {
-            transform: transforms,
-        }
     }
 };

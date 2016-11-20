@@ -1,5 +1,5 @@
 /** 
-* resource-manager-js - v2.3.5.
+* resource-manager-js - v2.3.6.
 * git://github.com/mkay581/resource-manager.git
 * Copyright 2016 Mark Kennedy. Licensed MIT.
 */

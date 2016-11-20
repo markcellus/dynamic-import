@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/mkay581/resource-manager.svg?branch=master)](https://travis-ci.org/mkay581/resource-manager)
+[![npm version](https://badge.fury.io/js/resource-manager.svg)](https://badge.fury.io/js/resource-manager)
 
 # Resource Manager
 
@@ -12,7 +13,11 @@ standard, allowing it to utilize [fetch](https://fetch.spec.whatwg.org/) calls t
 ## Usage
 
 In order to use carousel, you can use one of the [pre-built files](/dist) if you want to quickly get started. 
-Or, alternatively you can install as an npm package or use the [source files](/src) directly if you are using [Browserify](http://browserify.org/).
+Or, alternatively you can install as an npm package.
+
+```
+npm install resource-manager-js --save
+```
 
 
 ### Load CSS files

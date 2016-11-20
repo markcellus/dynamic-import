@@ -202,4 +202,4 @@ class ResourceManager {
 
 }
 
-module.exports = new ResourceManager();
+export default new ResourceManager();

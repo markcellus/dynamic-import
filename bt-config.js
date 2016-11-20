@@ -1,7 +1,25 @@
 'use strict';
+var transforms = [
+    [
+        "babelify",
+        {
+            "presets": [
+                "es2015"
+            ],
+            "plugins": [
+                [
+                    "add-module-exports"
+                ]
+            ]
+        }
+    ]
+];
 var srcTest = {
     mocha: {
-        files: ['tests/*.js']
+        files: ['tests/*.js'],
+        browserifyOptions: {
+            transform: transforms
+        }
     }
 };
 
@@ -18,7 +36,8 @@ module.exports = {
                 'dist/resource-manager.js': ['src/resource-manager.js']
             },
             browserifyOptions: {
-                standalone: 'ResourceManager'
+                standalone: 'ResourceManager',
+                transform: transforms,
             },
             minifyFiles: {
                 'dist/resource-manager-min.js': ['dist/resource-manager.js']

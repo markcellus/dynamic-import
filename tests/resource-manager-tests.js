@@ -244,4 +244,16 @@ describe('Resource Manager', function () {
             ResourceManager.flush();
         });
     });
+
+    it('should inject handlebar file contents into element the same way they appear in the original hbs file', function () {
+        var testEl = document.createElement('div');
+        var templateContents = '<div class="my-template-html"></div><div class="my-second-template-html"></div>';
+        var serverResp = {text: sinon.stub().returns(Promise.resolve(templateContents))};
+        window.fetch.returns(Promise.resolve(serverResp));
+        var hbsData = {myData: 'blah'};
+        return ResourceManager.loadTemplate('my.hbs', testEl).then(function () {
+            assert.equal(testEl.innerHTML, templateContents);
+            ResourceManager.flush();
+        });
+    });
 });

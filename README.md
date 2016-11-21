@@ -9,16 +9,16 @@ in a browser, for instance. All different file types are supported including CSS
 Note that this package is transpiled using [Babel](https://github.com/babel/babel) and conforms to the [ECMAScript 6](http://es6-features.org/)
 standard, allowing it to utilize [fetch](https://fetch.spec.whatwg.org/) calls to make its requests.
 
+## Installation
+ 
+To use this library, you can install as an npm package if you are using [Browserify](http://browserify.org/).
+
+```
+npm install progress-js --save-dev
+```
+
 
 ## Usage
-
-In order to use carousel, you can use one of the [pre-built files](/dist) if you want to quickly get started. 
-Or, alternatively you can install as an npm package.
-
-```
-npm install resource-manager-js --save
-```
-
 
 ### Load CSS files
 

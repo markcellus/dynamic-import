@@ -1,6 +1,7 @@
 "use strict";
-var sinon = require('sinon');
-var assert = require('assert');
+import sinon from 'sinon';
+import assert from 'assert';
+import ResourceManager from '../src/resource-manager';
 
 describe('Resource Manager', function () {
     var origWindowFetch;
@@ -15,7 +16,6 @@ describe('Resource Manager', function () {
     });
 
     it('should load and unload multiple css files', function () {
-        var ResourceManager = require('../src/resource-manager');
         var cssPaths = ['test/path/to/css/one', 'test/path/to/second/css'];
         return ResourceManager.loadCss(cssPaths).then(function () {
             var head = document.getElementsByTagName('head')[0];
@@ -31,7 +31,6 @@ describe('Resource Manager', function () {
 
     it('should add and remove css file from DOM appropriately', function () {
         var path = 'test/path/to/css/single.css';
-        var ResourceManager = require('../src/resource-manager');
         return ResourceManager.loadCss(path).then(function () {
             var head = document.getElementsByTagName('head')[0];
             assert.equal(head.querySelectorAll('link[href="' + path + '"]').length, 1, 'calling loadCss(), adds css in the head of the document');
@@ -45,7 +44,6 @@ describe('Resource Manager', function () {
     it('should NOT load css files that have already been loaded', function () {
         var cssPaths = ['test/path/to/css/one', 'test/path/to/second/css'];
         var head = document.getElementsByTagName('head')[0];
-        var ResourceManager = require('../src/resource-manager');
         return ResourceManager.loadCss(cssPaths).then(function () {
             assert.equal(head.querySelectorAll('link[href="' + cssPaths[0] + '"]').length, 1, 'on first loadCss() call, first file gets added to the head of the document once');
             assert.equal(head.querySelectorAll('link[href="' + cssPaths[1] + '"]').length, 1, 'second file gets added to the head of the document once');
@@ -62,7 +60,6 @@ describe('Resource Manager', function () {
 
     it('does not crash when nothing is passed to loadCss()', function () {
         var head = document.getElementsByTagName('head')[0];
-        var ResourceManager = require('../src/resource-manager');
         return ResourceManager.loadCss().then(function () {
             assert.ok(true, 'no crash');
             ResourceManager.flush();
@@ -74,7 +71,6 @@ describe('Resource Manager', function () {
         var templateHtml = '<div>mytext</div>';
         var serverResp = {text: sinon.stub().returns(Promise.resolve(templateHtml))};
         window.fetch.returns(Promise.resolve(serverResp));
-        var ResourceManager = require('../src/resource-manager');
         return ResourceManager.loadTemplate(path).then(function (html) {
             assert.equal(window.fetch.args[0][0], path);
             assert.equal(html, templateHtml);
@@ -84,7 +80,6 @@ describe('Resource Manager', function () {
 
     it('does not crash when nothing is passed to loadTemplate()', function () {
         var head = document.getElementsByTagName('head')[0];
-        var ResourceManager = require('../src/resource-manager');
         return ResourceManager.loadTemplate().then(function () {
             assert.ok(true, 'no crash');
             ResourceManager.flush();
@@ -95,7 +90,6 @@ describe('Resource Manager', function () {
         var path = 'path/to/my.js';
         var head = document.getElementsByTagName('head')[0];
         var scriptEl = document.createElement('script');
-        var ResourceManager = require('../src/resource-manager');
         var createScriptElementStub = sinon.stub(ResourceManager, 'createScriptElement').returns(scriptEl);
         sinon.stub(scriptEl, 'addEventListener').callsArg(1);
         return ResourceManager.loadScript(path).then(function () {
@@ -116,7 +110,6 @@ describe('Resource Manager', function () {
         var head = document.getElementsByTagName('head')[0];
         var firstScriptEl = document.createElement('script');
         var secondScriptEl = document.createElement('script');
-        var ResourceManager = require('../src/resource-manager');
         var createScriptElementStub = sinon.stub(ResourceManager, 'createScriptElement');
         createScriptElementStub.onFirstCall().returns(firstScriptEl);
         createScriptElementStub.onSecondCall().returns(secondScriptEl);
@@ -148,7 +141,6 @@ describe('Resource Manager', function () {
         var path = 'test/path/to/css/single';
         var serverResp = {json: sinon.stub().returns(Promise.resolve()), body: true};
         window.fetch.returns(Promise.resolve(serverResp));
-        var ResourceManager = require('../src/resource-manager');
         var options = {my: 'opts'};
         return ResourceManager.fetchData(path, options).then(function (resp) {
             assert.deepEqual(window.fetch.args[0], [path, options]);
@@ -161,7 +153,6 @@ describe('Resource Manager', function () {
         var path = 'test/path/to/css/single';
         var resp = {json: sinon.stub().returns(Promise.resolve()), body: true};
         window.fetch.returns(Promise.resolve(resp));
-        var ResourceManager = require('../src/resource-manager');
         var options = {opts: 'same', cache: true};
         return ResourceManager.fetchData(path, options).then(function (data) {
             assert.deepEqual(data, resp, 'correct mock data was returned on first call');
@@ -178,7 +169,6 @@ describe('Resource Manager', function () {
         var mockData = {heres: 'my data'};
         var resp = {json: sinon.stub().returns(mockData), body: true};
         window.fetch.returns(Promise.resolve(resp));
-        var ResourceManager = require('../src/resource-manager');
         var options = {opts: 'same', cache: false};
         var fetchCallCount = 0;
         return ResourceManager.fetchData(path, options).then(function (data) {
@@ -194,7 +184,6 @@ describe('Resource Manager', function () {
     it('passing no parameters to fetch data will not make an fetch call and resolve promise immediately', function () {
         var path = 'test/path/to/css/single';
         window.fetch.returns(Promise.resolve());
-        var ResourceManager = require('../src/resource-manager');
         return ResourceManager.fetchData().then(function () {
             assert.equal(window.fetch.callCount, 0, 'fetch was NOT called');
             ResourceManager.flush();
@@ -204,7 +193,6 @@ describe('Resource Manager', function () {
     it('calling fetchData() for a second time with the same options as previous after the first failure should perform an fetch request again', function () {
         var path = 'test/path/to/css/single';
         window.fetch.returns(Promise.reject());
-        var ResourceManager = require('../src/resource-manager');
         var options = {opts: 'same'};
         return ResourceManager.fetchData(path, options).catch(function () {
             assert.equal(window.fetch.callCount, 1, 'fetch was called');
@@ -221,7 +209,6 @@ describe('Resource Manager', function () {
         var head = document.getElementsByTagName('head')[0];
         var firstScriptEl = document.createElement('script');
         var secondScriptEl = document.createElement('script');
-        var ResourceManager = require('../src/resource-manager');
         var createScriptElementStub = sinon.stub(ResourceManager, 'createScriptElement');
         createScriptElementStub.onFirstCall().returns(firstScriptEl);
         createScriptElementStub.onSecondCall().returns(secondScriptEl);
@@ -237,7 +224,6 @@ describe('Resource Manager', function () {
         var path = 'test/path/to/css/single';
         var errorObj = {my: 'error'};
         window.fetch.returns(Promise.reject(errorObj));
-        var ResourceManager = require('../src/resource-manager');
         var options = {opts: 'same'};
         return ResourceManager.fetchData(path, options)
             .catch(function (e) {

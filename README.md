@@ -14,7 +14,7 @@ standard, allowing it to utilize [fetch](https://fetch.spec.whatwg.org/) calls t
 To use this library, you can install as an npm package if you are using [Browserify](http://browserify.org/).
 
 ```
-npm install progress-js --save-dev
+npm install resource-manager-js --save-dev
 ```
 
 

@@ -231,4 +231,17 @@ describe('Resource Manager', function () {
                 ResourceManager.flush();
             });
     });
+
+    it('should inject handlebar file contents into element with updated data', function () {
+        var path = 'my.hbs';
+        var testEl = document.createElement('div');
+        var hbsFileContents = '<div>{{myData}}</div>';
+        var serverResp = {text: sinon.stub().returns(Promise.resolve(hbsFileContents))};
+        window.fetch.returns(Promise.resolve(serverResp));
+        var hbsData = {myData: 'blah'};
+        return ResourceManager.loadTemplate(path, testEl, hbsData).then(function () {
+            assert.equal(testEl.innerHTML, '<div>blah</div>');
+            ResourceManager.flush();
+        });
+    });
 });

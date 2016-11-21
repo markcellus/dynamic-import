@@ -47,6 +47,7 @@
     "babelify": "^7.3.0",
     "browserify": "^13.0.1",
     "es6-promise": "^4.0.5",
+    "handlebars": "^4.0.6",
     "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {

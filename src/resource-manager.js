@@ -1,6 +1,7 @@
 'use strict';
 require('es6-promise').polyfill(); // needed for fetch
 import 'whatwg-fetch';
+var Handlebars = require('handlebars');
 /**
  * Makes sure that a path is converted to an array.
  * @param paths
@@ -164,23 +165,36 @@ class ResourceManager {
      * Parses a template into a DOM element, then returns element back to you.
      * @param {string} path - The path to the template
      * @param {HTMLElement} [el] - The element to attach template to
+     * @param {Object|Array} [hbsData] - The data to use for the handlebar template (if applicable)
      * @returns {Promise} Returns a promise that resolves with contents of template file
      */
-    loadTemplate (path, el) {
-        if (path) {
-            return fetch(path).then(function (resp) {
-                return resp.text().then(function (contents) {
-                    if (el) {
-                        el.innerHTML = contents;
-                        contents = el;
-                    }
-                    return contents;
-                })
-            });
-        } else {
-            // no path was supplied
+    loadTemplate (path, el, hbsData) {
+
+        let isHandlebarFile = function (filePath) {
+            if (filePath) {
+                let frags = filePath.split('.');
+                let ext = frags[frags.length -1];
+                return ext === 'hbs';
+            }
+        };
+
+        if (!path) {
             return Promise.resolve();
         }
+
+        return fetch(path).then(function (resp) {
+            return resp.text().then(function (contents) {
+                if (isHandlebarFile(path)) {
+                    contents = Handlebars.compile(contents)(hbsData || {});
+                }
+                if (el) {
+                    el.innerHTML = contents;
+                    contents = el;
+                }
+                return contents;
+            })
+        });
+
     }
 
     /**

@@ -256,4 +256,16 @@ describe('Resource Manager', function () {
             ResourceManager.flush();
         });
     });
+
+    it('fetchTemplate() should make fetch request with correct options and return proper text response', function () {
+        var path = 'test/path/to/css/single';
+        var templateHtml = '<div>mytext</div>';
+        var serverResp = {text: sinon.stub().returns(Promise.resolve(templateHtml))};
+        window.fetch.returns(Promise.resolve(serverResp));
+        return ResourceManager.fetchTemplate(path).then(function (html) {
+            assert.equal(window.fetch.args[0][0], path);
+            assert.equal(html, templateHtml);
+            ResourceManager.flush();
+        });
+    });
 });

@@ -182,19 +182,30 @@ class ResourceManager {
             return Promise.resolve();
         }
 
-        return fetch(path).then(function (resp) {
+        return this.fetchTemplate(path).then(function (contents) {
+            if (isHandlebarFile(path)) {
+                contents = Handlebars.compile(contents)(hbsData || {});
+            }
+            if (el) {
+                el.innerHTML = contents;
+                contents = el;
+            }
+            return contents;
+        })
+
+    }
+
+    /**
+     * Fetches a template file from the server.
+     * @param [templatePath] - The file path to the template file
+     * @returns {Promise} Returns a promise that is resolved with the contents of the template file when retrieved
+     */
+    fetchTemplate(templatePath) {
+        return fetch(templatePath).then(function (resp) {
             return resp.text().then(function (contents) {
-                if (isHandlebarFile(path)) {
-                    contents = Handlebars.compile(contents)(hbsData || {});
-                }
-                if (el) {
-                    el.innerHTML = contents;
-                    contents = el;
-                }
                 return contents;
             })
         });
-
     }
 
     /**

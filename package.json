@@ -54,7 +54,7 @@
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
-    "build-tools": "^7.0.0",
+    "build-tools": "^7.0.5",
     "sinon": "^2.3.4"
   }
 }

@@ -1,7 +1,6 @@
-'use strict';
 require('es6-promise').polyfill(); // needed for fetch
 import 'whatwg-fetch';
-var Handlebars = require('handlebars');
+let Handlebars = require('handlebars');
 /**
  * Makes sure that a path is converted to an array.
  * @param paths
@@ -41,7 +40,7 @@ class ResourceManager {
      * @return {Promise} Returns a promise that resolves when all scripts have been loaded
      */
     loadScript (paths) {
-        var script,
+        let script,
             map,
             loadPromises = [];
         paths = ensurePathArray(paths);
@@ -68,7 +67,7 @@ class ResourceManager {
      * @memberOf ResourceManager
      */
     unloadScript (paths) {
-        var file;
+        let file;
         return new Promise(function (resolve) {
             paths = ensurePathArray(paths);
             paths.forEach(function (path) {
@@ -97,7 +96,7 @@ class ResourceManager {
      * @returns {*}
      */
     fetchData (url, reqOptions = {}) {
-        var cacheId = url + JSON.stringify(reqOptions);
+        let cacheId = url + JSON.stringify(reqOptions);
 
         reqOptions.cache = reqOptions.cache === undefined ? true : reqOptions.cache;
 
@@ -129,7 +128,7 @@ class ResourceManager {
                 // TODO: figure out a way to find out when css is guaranteed to be loaded,
                 // and make this return a truely asynchronous promise
                 if (!this._cssPaths[path]) {
-                    var el = document.createElement('link');
+                    let el = document.createElement('link');
                     el.setAttribute('rel','stylesheet');
                     el.setAttribute('href', path);
                     this._head.appendChild(el);
@@ -147,7 +146,7 @@ class ResourceManager {
      * @return {Promise}
      */
     unloadCss (paths) {
-        var el;
+        let el;
         return new Promise(function (resolve) {
             paths = ensurePathArray(paths);
             paths.forEach(function (path) {

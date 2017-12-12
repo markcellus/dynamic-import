@@ -65,17 +65,3 @@ ResourceManager.loadTemplate('path/to/html/file', body).then(function () {
 });
 ```
 
-You can even load handlebar templates in the browser using `loadTemplate()`!
-
-```hbs
-{{!-- server/my-handlebar-file.hbs --}}
-<div>{{name}}</div>
-```
-
-```javascript
-var body = document.body;
-var myData = {name: 'John Doe'};
-ResourceManager.loadTemplate('server/my-handlebar-file.hbs', body, myData).then(function () {
-    // handlebar contents with updated name injected into body element
-});
-```

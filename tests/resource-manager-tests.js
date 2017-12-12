@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import assert from 'assert';
-import ResourceManager from '../src/resource-manager';
+import ResourceManager from '../dist/resource-manager';
 
 describe('Resource Manager', function () {
     let origWindowFetch;
@@ -229,31 +229,6 @@ describe('Resource Manager', function () {
                 assert.deepEqual(e, errorObj);
                 ResourceManager.flush();
             });
-    });
-
-    it('should inject handlebar file contents into element with updated data', function () {
-        let path = 'my.hbs';
-        let testEl = document.createElement('div');
-        let hbsFileContents = '<div>{{myData}}</div>';
-        let serverResp = {text: sinon.stub().returns(Promise.resolve(hbsFileContents))};
-        window.fetch.returns(Promise.resolve(serverResp));
-        let hbsData = {myData: 'blah'};
-        return ResourceManager.loadTemplate(path, testEl, hbsData).then(function () {
-            assert.equal(testEl.innerHTML, '<div>blah</div>');
-            ResourceManager.flush();
-        });
-    });
-
-    it('should inject handlebar file contents into element the same way they appear in the original hbs file', function () {
-        let testEl = document.createElement('div');
-        let templateContents = '<div class="my-template-html"></div><div class="my-second-template-html"></div>';
-        let serverResp = {text: sinon.stub().returns(Promise.resolve(templateContents))};
-        window.fetch.returns(Promise.resolve(serverResp));
-        let hbsData = {myData: 'blah'};
-        return ResourceManager.loadTemplate('my.hbs', testEl).then(function () {
-            assert.equal(testEl.innerHTML, templateContents);
-            ResourceManager.flush();
-        });
     });
 
     it('fetchTemplate() should make fetch request with correct options and return proper text response', function () {

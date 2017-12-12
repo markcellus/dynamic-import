@@ -1,6 +1,6 @@
 require('es6-promise').polyfill(); // needed for fetch
 import 'whatwg-fetch';
-let handlebars = require('../lib/handlebars.min');
+
 /**
  * Makes sure that a path is converted to an array.
  * @param paths
@@ -168,24 +168,11 @@ class ResourceManager {
      * @returns {Promise} Returns a promise that resolves with contents of template file
      */
     loadTemplate (path, el, hbsData) {
-
-        let isHandlebarFile = function (filePath) {
-            if (filePath) {
-                let frags = filePath.split('.');
-                let ext = frags[frags.length -1];
-                return ext === 'hbs';
-            }
-        };
-
         if (!path) {
             return Promise.resolve();
         }
 
         return this.fetchTemplate(path).then(function (contents) {
-            if (isHandlebarFile(path)) {
-                const template = handlebars.compile(contents);
-                contents = template(hbsData || {});
-            }
             if (el) {
                 el.innerHTML = contents;
                 contents = el;
@@ -226,4 +213,6 @@ class ResourceManager {
     }
 
 }
-export default new ResourceManager();
+const resourceManager = new ResourceManager();
+
+export default resourceManager;

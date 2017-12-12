@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/mkay581/resource-manager.svg?branch=master)](https://travis-ci.org/mkay581/resource-manager)
-[![npm version](https://badge.fury.io/js/resource-manager.svg)](https://badge.fury.io/js/resource-manager)
+[![Build Status](https://travis-ci.org/mkay581/resource-manager.svg?branch=master)](https://travis-ci.org/mkay581/resource-manager-js)
+[![npm version](https://badge.fury.io/js/resource-manager.svg)](https://badge.fury.io/js/resource-manager-js)
 
 # Resource Manager
 

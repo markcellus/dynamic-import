@@ -39,8 +39,10 @@
     "babelify": "^7.3.0",
     "browserify": "^14.4.0",
     "build-tools": "^7.0.5",
+    "sinon": "^2.3.4"
+  },
+  "dependencies": {
     "es6-promise": "^4.0.5",
-    "sinon": "^2.3.4",
     "whatwg-fetch": "^2.0.3"
   }
 }

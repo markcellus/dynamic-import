@@ -1,5 +1,5 @@
 /** 
-* resource-manager-js - v4.0.0.
+* resource-manager-js - v4.0.1.
 * git://github.com/mkay581/resource-manager-js.git
 * Copyright 2017 Mark Kennedy. Licensed MIT.
 */
@@ -2018,13 +2018,12 @@ var ResourceManager = function () {
          * Parses a template into a DOM element, then returns element back to you.
          * @param {string} path - The path to the template
          * @param {HTMLElement} [el] - The element to attach template to
-         * @param {Object|Array} [hbsData] - The data to use for the handlebar template (if applicable)
          * @returns {Promise} Returns a promise that resolves with contents of template file
          */
 
     }, {
         key: 'loadTemplate',
-        value: function loadTemplate(path, el, hbsData) {
+        value: function loadTemplate(path, el) {
             if (!path) {
                 return Promise.resolve();
             }

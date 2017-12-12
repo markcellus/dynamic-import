@@ -4,7 +4,7 @@
   "description": "Loads and caches all resources needed for a web app including css, templates, and scripts",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mkay581/resource-manager.git"
+    "url": "git://github.com/mkay581/resource-manager-js.git"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"

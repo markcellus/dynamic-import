@@ -12,6 +12,9 @@
     "node"
   ],
   "main": "src/resource-manager.js",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "keywords": [
     "resources",
     "resource-manager",

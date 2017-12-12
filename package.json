@@ -1,6 +1,6 @@
 {
   "name": "resource-manager-js",
-  "version": "3.1.1",
+  "version": "4.0.0",
   "description": "Loads and caches all resources needed for a web app including css, templates, and scripts",
   "repository": {
     "type": "git",

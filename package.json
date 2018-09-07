@@ -34,7 +34,7 @@
     "postversion": "git push && git push --tags"
   },
   "license": "MIT",
-  "main": "src/resource-manager.js",
+  "main": "dist/resource-manager.js",
   "author": "Mark Kennedy <mark@heyimmark.com> (heyimmark.com)",
   "devDependencies": {
     "assert": "^1.4.1",

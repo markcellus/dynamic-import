@@ -1,14 +1,10 @@
-let transform = [
+const fs = require('fs-extra');
+
+const babelifyOptions = fs.readJsonSync('.babelrc');
+const transform = [
     [
-        "babelify",
-        {
-            "presets": [
-                "es2015"
-            ],
-            "plugins": [
-                "add-module-exports"
-            ]
-        }
+        'babelify',
+        babelifyOptions
     ]
 ];
 module.exports = {

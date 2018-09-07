@@ -1,6 +1,3 @@
-require('es6-promise').polyfill(); // needed for fetch
-import 'whatwg-fetch';
-
 /**
  * Makes sure that a path is converted to an array.
  * @param paths
@@ -39,25 +36,25 @@ class ResourceManager {
      * @memberOf ResourceManager
      * @return {Promise} Returns a promise that resolves when all scripts have been loaded
      */
-    loadScript (paths) {
+    async loadScript (paths) {
         let script,
             map,
             loadPromises = [];
         paths = ensurePathArray(paths);
-        paths.forEach(function (path) {
+        paths.forEach((path) => {
             map = this._scriptMaps[path] = this._scriptMaps[path] || {};
             if (!map.promise) {
                 map.path = path;
-                map.promise = new Promise(function (resolve) {
+                map.promise = new Promise((resolve) => {
                     script = this.createScriptElement();
                     script.setAttribute('type','text/javascript');
                     script.src = path;
                     script.addEventListener('load', resolve);
                     this._head.appendChild(script);
-                }.bind(this));
+                });
             }
             loadPromises.push(map.promise);
-        }.bind(this));
+        });
         return Promise.all(loadPromises);
     }
 
@@ -66,19 +63,19 @@ class ResourceManager {
      * @param {string|Array} paths - The paths of the scripts to unload
      * @memberOf ResourceManager
      */
-    unloadScript (paths) {
+    async unloadScript (paths) {
         let file;
-        return new Promise(function (resolve) {
+        return new Promise((resolve) => {
             paths = ensurePathArray(paths);
-            paths.forEach(function (path) {
+            paths.forEach((path) => {
                 file = this._head.querySelectorAll('script[src="' + path + '"]')[0];
                 if (file) {
                     this._head.removeChild(file);
                     delete this._scriptMaps[path];
                 }
-            }.bind(this));
+            });
             resolve();
-        }.bind(this));
+        });
     }
 
     /**
@@ -95,7 +92,7 @@ class ResourceManager {
      * @param [reqOptions] - options to be passed to fetch call
      * @returns {*}
      */
-    fetchData (url, reqOptions = {}) {
+    async fetchData (url, reqOptions = {}) {
         let cacheId = url + JSON.stringify(reqOptions);
 
         reqOptions.cache = reqOptions.cache === undefined ? true : reqOptions.cache;
@@ -104,13 +101,14 @@ class ResourceManager {
             return Promise.resolve();
         }
         if (!this._dataPromises[cacheId] || !reqOptions.cache) {
-            this._dataPromises[cacheId] = fetch(url, reqOptions)
-                .catch((e) => {
-                    // if failure, remove cache so that subsequent
-                    // requests will trigger new ajax call
-                    this._dataPromises[cacheId] = null;
-                    throw e;
-                });
+            try {
+                this._dataPromises[cacheId] = await fetch(url, reqOptions)
+            } catch (e) {
+                // if failure, remove cache so that subsequent
+                // requests will trigger new ajax call
+                this._dataPromises[cacheId] = null;
+                throw e;
+            }
         }
         return this._dataPromises[cacheId];
     }
@@ -121,10 +119,10 @@ class ResourceManager {
      * @memberOf ResourceManager
      * @return {Promise}
      */
-    loadCss (paths) {
-        return new Promise(function (resolve) {
+    async loadCss (paths) {
+        return new Promise((resolve) => {
             paths = ensurePathArray(paths);
-            paths.forEach(function (path) {
+            paths.forEach((path) => {
                 // TODO: figure out a way to find out when css is guaranteed to be loaded,
                 // and make this return a truely asynchronous promise
                 if (!this._cssPaths[path]) {
@@ -134,9 +132,9 @@ class ResourceManager {
                     this._head.appendChild(el);
                     this._cssPaths[path] = el;
                 }
-            }.bind(this));
+            });
             resolve();
-        }.bind(this));
+        });
     }
 
     /**
@@ -145,19 +143,19 @@ class ResourceManager {
      * @memberOf ResourceManager
      * @return {Promise}
      */
-    unloadCss (paths) {
+    async unloadCss (paths) {
         let el;
-        return new Promise(function (resolve) {
+        return new Promise((resolve) => {
             paths = ensurePathArray(paths);
-            paths.forEach(function (path) {
+            paths.forEach((path) => {
                 el = this._cssPaths[path];
                 if (el) {
                     this._head.removeChild(el);
                     this._cssPaths[path] = null;
                 }
-            }.bind(this));
+            });
             resolve();
-        }.bind(this));
+        });
     }
 
     /**
@@ -166,18 +164,16 @@ class ResourceManager {
      * @param {HTMLElement} [el] - The element to attach template to
      * @returns {Promise} Returns a promise that resolves with contents of template file
      */
-    loadTemplate (path, el) {
+    async loadTemplate (path, el) {
         if (!path) {
             return Promise.resolve();
         }
-
-        return this.fetchTemplate(path).then(function (contents) {
-            if (el) {
-                el.innerHTML = contents;
-                contents = el;
-            }
-            return contents;
-        })
+        const contents = await this.fetchTemplate(path);
+        if (el) {
+            el.innerHTML = contents;
+            return el;
+        }
+        return contents;
 
     }
 
@@ -186,25 +182,22 @@ class ResourceManager {
      * @param [templatePath] - The file path to the template file
      * @returns {Promise} Returns a promise that is resolved with the contents of the template file when retrieved
      */
-    fetchTemplate(templatePath) {
-        return fetch(templatePath).then(function (resp) {
-            return resp.text().then(function (contents) {
-                return contents;
-            })
-        });
+    async fetchTemplate(templatePath) {
+        const resp = await fetch(templatePath);
+        return await resp.text();
     }
 
     /**
      * Removes all cached resources.
      * @memberOf ResourceManager
      */
-    flush () {
-        this.unloadCss(Object.getOwnPropertyNames(this._cssPaths));
+    async flush () {
+        await this.unloadCss(Object.getOwnPropertyNames(this._cssPaths));
         this._cssPaths = {};
         for (let s in this._scriptMaps) {
             if (this._scriptMaps.hasOwnProperty(s)) {
                 let map = this._scriptMaps[s];
-                this.unloadScript(map.path);
+                await this.unloadScript(map.path);
             }
         }
         this._scriptMaps = {};

@@ -1,0 +1,13 @@
+{
+  "presets": [
+    "env"
+  ],
+  "plugins": [
+    "add-module-exports",
+    "es6-promise",
+    ["transform-runtime", {
+      "polyfill": false,
+      "regenerator": true
+    }]
+  ]
+}

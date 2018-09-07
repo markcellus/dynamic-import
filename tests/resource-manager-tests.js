@@ -1,6 +1,6 @@
 import sinon from 'sinon';
+import ResourceManager from '../src/resource-manager';
 import assert from 'assert';
-import ResourceManager from '../dist/resource-manager';
 
 describe('Resource Manager', function () {
     let origWindowFetch;
@@ -58,7 +58,6 @@ describe('Resource Manager', function () {
     });
 
     it('does not crash when nothing is passed to loadCss()', function () {
-        let head = document.getElementsByTagName('head')[0];
         return ResourceManager.loadCss().then(function () {
             assert.ok(true, 'no crash');
             ResourceManager.flush();
@@ -78,7 +77,6 @@ describe('Resource Manager', function () {
     });
 
     it('does not crash when nothing is passed to loadTemplate()', function () {
-        let head = document.getElementsByTagName('head')[0];
         return ResourceManager.loadTemplate().then(function () {
             assert.ok(true, 'no crash');
             ResourceManager.flush();
@@ -181,7 +179,6 @@ describe('Resource Manager', function () {
     });
 
     it('passing no parameters to fetch data will not make an fetch call and resolve promise immediately', function () {
-        let path = 'test/path/to/css/single';
         window.fetch.returns(Promise.resolve());
         return ResourceManager.fetchData().then(function () {
             assert.equal(window.fetch.callCount, 0, 'fetch was NOT called');

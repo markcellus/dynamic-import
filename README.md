@@ -3,18 +3,21 @@
 
 # Resource Manager
 
-A library that loads and caches files (and their contents) on-the-fly. Which is extremely helpful when preloading files
-in a browser, for instance. All different file types are supported including CSS, JavaScript, and HTML templates.
-
-Note that this package is transpiled using [Babel](https://github.com/babel/babel) and conforms to the [ECMAScript 6](http://es6-features.org/)
-standard, allowing it to utilize [fetch](https://fetch.spec.whatwg.org/) calls to make its requests.
+A library that imports, loads and caches CSS, JavaScript, and HTML template files (and their contents) on-the-fly in a browser.  
+Useful for preloading files programmatically (in background), loading and unloading scripts inside
+the `<head>` of an html page (avoiding duplicates), or cases when you may want to keep your css, js and templates 
+in separate files and only want to import them into an HTML page at different times.
 
 ## Installation
  
-To use this library, you can install as an npm package if you are using [Browserify](http://browserify.org/).
-
 ```
-npm install resource-manager-js --save-dev
+npm i resource-manager-js --save-dev
+```
+
+You can also use the dist files in the browser.
+
+```html
+<script type="module" src="node_modules/resource-manager-js/dist/resource-manager.min.js"></script>
 ```
 
 
@@ -59,8 +62,7 @@ Load HTML file contents into an already-existing DOM element by using the `loadT
 
 
 ```javascript
-var body = document.body;
-ResourceManager.loadTemplate('path/to/html/file', body).then(function () {
+ResourceManager.loadTemplate('path/to/html/file', document.body).then(function () {
     // html contents have been loaded into the body element
 });
 ```

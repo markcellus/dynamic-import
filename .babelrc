@@ -1,11 +1,12 @@
 {
   "presets": [
-    "env"
+    ["env"]
   ],
   "plugins": [
     ["transform-runtime", {
       "polyfill": true,
-      "regenerator": true
+      "regenerator": true,
+      "useESModules": true
     }]
   ],
   "sourceType": "module"

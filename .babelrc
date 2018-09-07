@@ -3,11 +3,10 @@
     "env"
   ],
   "plugins": [
-    "add-module-exports",
-    "es6-promise",
     ["transform-runtime", {
-      "polyfill": false,
+      "polyfill": true,
       "regenerator": true
     }]
-  ]
+  ],
+  "sourceType": "module"
 }

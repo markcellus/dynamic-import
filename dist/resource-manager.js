@@ -1,5 +1,5 @@
 /*!
- * Resource-manager-js v4.0.1
+ * Resource-manager-js v5.0.0
  * https://github.com/mkay581/resource-manager-js#readme
  *
  * Copyright (c) 2018 Mark Kennedy

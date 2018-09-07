@@ -29,7 +29,7 @@
     "test": "bt test",
     "preversion": "npm test",
     "minify": "uglifyjs dist/resource-manager.js -o dist/resource-manager.min.js",
-    "build-dist": "rm -rf dist/* && browserify src/resource-manager.js -o dist/resource-manager.js -t [ babelify ]  --standalone ResourceManager && npm run minify",
+    "build-dist": "rm -rf dist/* && rollup src/resource-manager.js --format umd --name ResourceManager --file dist/resource-manager.js",
     "version": "npm run build-dist && banner-cli dist/*.js && git add -A dist",
     "postversion": "git push && git push --tags"
   },
@@ -46,7 +46,7 @@
     "browserify": "^16.2.2",
     "build-tools": "^8.0.0",
     "eslint": "^5.5.0",
-    "fs-extra": "^7.0.0",
+    "rollup": "^0.65.2",
     "sinon": "^6.2.0",
     "uglify-js": "^3.4.9"
   }

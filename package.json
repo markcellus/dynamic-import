@@ -29,7 +29,7 @@
     "test": "bt test",
     "preversion": "npm test",
     "minify": "uglifyjs dist/resource-manager.js -o dist/resource-manager.min.js",
-    "build-dist": "rm -rf dist/* && rollup src/resource-manager.js --format umd --name ResourceManager --file dist/resource-manager.js",
+    "build-dist": "rm -rf dist/* && rollup src/resource-manager.js --format umd --name ResourceManager --file dist/resource-manager.js && npm run minify",
     "version": "npm run build-dist && banner-cli dist/*.js && git add -A dist",
     "postversion": "git push && git push --tags"
   },
@@ -48,6 +48,6 @@
     "eslint": "^5.5.0",
     "rollup": "^0.65.2",
     "sinon": "^6.2.0",
-    "uglify-js": "^3.4.9"
+    "uglify-es": "^3.3.9"
   }
 }

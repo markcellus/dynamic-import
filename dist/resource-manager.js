@@ -1,15 +1,7 @@
-/*!
- * Resource-manager-js v5.0.5
- * https://github.com/mkay581/resource-manager-js#readme
- *
- * Copyright (c) 2018 Mark Kennedy
- * Licensed under the MIT license
- */
-
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.ResourceManager = factory());
+    (global['ResourceManager '] = factory());
 }(this, (function () { 'use strict';
 
     /**

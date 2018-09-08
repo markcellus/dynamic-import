@@ -29,12 +29,12 @@
     "test": "bt test",
     "preversion": "npm test",
     "minify": "uglifyjs dist/resource-manager.js -o dist/resource-manager.min.js",
-    "build-dist": "rm -rf dist/* && rollup src/resource-manager.js --format umd --name ResourceManager --file dist/resource-manager.js && npm run minify",
+    "build-dist": "rm -rf dist/* && rollup -c && npm run minify",
     "version": "npm run build-dist && banner-cli dist/*.js && git add -A dist",
     "postversion": "git push && git push --tags"
   },
   "license": "MIT",
-  "main": "dist/resource-manager.js",
+  "main": "src/resource-manager.js",
   "author": "Mark Kennedy <mark@heyimmark.com> (heyimmark.com)",
   "devDependencies": {
     "assert": "^1.4.1",

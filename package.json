@@ -1,6 +1,6 @@
 {
   "name": "resource-manager-js",
-  "version": "5.0.6",
+  "version": "5.0.7",
   "homepage": "https://github.com/mkay581/resource-manager-js#readme",
   "description": "Loads and caches all resources needed for a web app including css, templates, and scripts",
   "repository": {

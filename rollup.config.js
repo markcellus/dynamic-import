@@ -1,15 +1,16 @@
 const formats = [
-    {format: 'esm', file: 'resource-manager.esm.js'},
-    {format: 'umd', file: 'resource-manager.js'},
+    {format: 'esm', extension: 'js'},
+    {format: 'umd', extension: 'umd.js'},
 ];
 
-const configs = formats.map(({format, file}) => {
+const configs = formats.map(({format, extension}) => {
+    const filePath = 'resource-manager';
     return {
-        input: 'src/resource-manager.js',
+        input: `src/${filePath}.js`,
         output: {
             name: 'ResourceManager ',
             format,
-            file: `dist/${file}`
+            file: `dist/${filePath}.${extension}`
         }
     };
 });

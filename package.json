@@ -28,7 +28,7 @@
   "scripts": {
     "test": "bt test",
     "preversion": "npm test",
-    "minify": "uglifyjs dist/resource-manager.js -o dist/resource-manager.min.js",
+    "minify": "uglifyjs dist/resource-manager.umd.js -o dist/resource-manager.umd.min.js",
     "build-dist": "rm -rf dist/* && rollup -c && npm run minify",
     "version": "npm run build-dist && banner-cli dist/*.js && git add -A dist",
     "postversion": "git push && git push --tags"

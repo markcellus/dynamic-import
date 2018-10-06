@@ -1,11 +1,11 @@
 {
-  "name": "resource-manager-js",
-  "version": "5.0.7",
-  "homepage": "https://github.com/mkay581/resource-manager-js#readme",
-  "description": "Loads and caches all resources needed for a web app including css, templates, and scripts",
+  "name": "dynamic-import",
+  "version": "0.1.0",
+  "homepage": "https://github.com/mkay581/dynamic-import#readme",
+  "description": "Dynamically load scripts, components, css, and templates",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mkay581/resource-manager-js.git"
+    "url": "git://github.com/mkay581/dynamic-import.git"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -14,40 +14,42 @@
     "node": ">=8.11.2"
   },
   "keywords": [
-    "resources",
-    "resource-manager",
-    "css loader",
-    "js loader",
-    "script loader",
-    "html loader",
-    "file loader",
-    "css file",
-    "js file",
-    "caching"
+    "dynamic import",
+    "dynamic imports",
+    "import",
+    "dynamic import polyfill"
   ],
+  "types": "./src/import.ts",
   "scripts": {
-    "test": "bt test",
+    "test": "karma start karma.conf.js && tslint src/**/*",
+    "test-server": "karma start karma.conf.js --single-run=false",
     "preversion": "npm test",
-    "minify": "uglifyjs dist/resource-manager.umd.js -o dist/resource-manager.umd.min.js",
+    "minify": "uglifyjs dist/import.js -o dist/import.min.js",
     "build-dist": "rm -rf dist/* && rollup -c && npm run minify",
     "version": "npm run build-dist && banner-cli dist/*.js && git add -A dist",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "start-dev": "rollup -c --watch"
   },
   "license": "MIT",
-  "main": "src/resource-manager.js",
+  "main": "./dist/import.js",
   "author": "Mark Kennedy <mark@heyimmark.com> (heyimmark.com)",
   "devDependencies": {
-    "assert": "^1.4.1",
-    "babel-core": "^6.26.3",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.7.0",
-    "babelify": "^8.0.0",
     "banner-cli": "0.11.1",
     "browserify": "^16.2.2",
-    "build-tools": "^8.0.0",
-    "eslint": "^5.5.0",
+    "chai": "^4.2.0",
+    "karma": "^3.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-mocha": "^1.3.0",
+    "karma-rollup-preprocessor": "^6.0.1",
+    "mocha": "^5.2.0",
     "rollup": "^0.65.2",
+    "rollup-plugin-commonjs": "^9.1.8",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-typescript": "^1.0.0",
     "sinon": "^6.2.0",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
+    "typescript": "^3.1.1",
     "uglify-es": "^3.3.9"
   }
 }

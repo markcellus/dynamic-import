@@ -1,18 +1,19 @@
-const formats = [
-    {format: 'esm', extension: 'js'},
-    {format: 'umd', extension: 'umd.js'},
-];
+import typescript from 'rollup-plugin-typescript';
+import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
 
-const configs = formats.map(({format, extension}) => {
-    const filePath = 'resource-manager';
-    return {
-        input: `src/${filePath}.js`,
-        output: {
-            name: 'ResourceManager ',
-            format,
-            file: `dist/${filePath}.${extension}`
-        }
-    };
-});
-
-export default configs;
+export default {
+    input: 'src/import.ts',
+    output: {
+        format: 'esm',
+        file: `dist/import.js`
+    },
+    plugins: [
+        resolve(),
+        typescript(),
+        commonjs()
+    ],
+    watch: {
+        include: 'src/**'
+    }
+}

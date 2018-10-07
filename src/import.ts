@@ -18,7 +18,7 @@ interface ElementAttributes {
 }
 
 function loadFile(tagName, path, attributes: ElementAttributes = {}): Promise<HTMLElement> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const element = document.createElement(tagName);
         for (const key in attributes) {
             if (attributes.hasOwnProperty(key)) {
@@ -36,6 +36,9 @@ function loadFile(tagName, path, attributes: ElementAttributes = {}): Promise<HT
             element.src = path;
             element.addEventListener('load', () => {
                 resolve(element);
+            });
+            element.addEventListener('error', () => {
+                reject(element);
             });
         }
         head.appendChild(element);

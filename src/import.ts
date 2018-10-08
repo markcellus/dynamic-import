@@ -104,17 +104,19 @@ export const style = {
 };
 
 export const html = {
-    async import (path: string, el?: HTMLElement): Promise<HTMLElement | string> {
+    async import (path: string, el?: HTMLElement): Promise<HTMLElement | DocumentFragment> {
         if (!path) {
-            return Promise.resolve('');
+            throw new Error('No path provided to html.import()');
         }
         const resp = await fetch(path);
         const contents = await resp.text();
         if (el) {
             el.innerHTML = contents;
             return el;
+        } else {
+            const template = document.createElement('template');
+            template.innerHTML = contents;
+            return template.content;
         }
-        return contents;
-
     }
 };

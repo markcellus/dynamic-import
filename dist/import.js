@@ -1,3 +1,11 @@
+/*!
+ * Dynamic-import v0.1.1
+ * https://github.com/mkay581/dynamic-import#readme
+ *
+ * Copyright (c) 2018 Mark Kennedy
+ * Licensed under the MIT license
+ */
+
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -22,6 +30,9 @@ function __awaiter(thisArg, _arguments, P, generator) {
     });
 }
 
+const head = document.getElementsByTagName('head')[0];
+const cssPaths = {};
+const scriptMaps = {};
 function ensurePathArray(paths) {
     if (!paths) {
         paths = [];
@@ -31,9 +42,34 @@ function ensurePathArray(paths) {
     }
     return paths;
 }
-const head = document.getElementsByTagName('head')[0];
-const cssPaths = {};
-const scriptMaps = {};
+function loadFile(tagName, path, attributes = {}) {
+    return new Promise((resolve, reject) => {
+        const element = document.createElement(tagName);
+        for (const key in attributes) {
+            if (attributes.hasOwnProperty(key)) {
+                element.setAttribute(key, attributes[key]);
+            }
+        }
+        if (attributes.rel && attributes.rel === 'stylesheet') {
+            element.setAttribute('href', path);
+            // stylesheets dont seem to trigger onload events in all browsers
+            const timerId = setTimeout(() => {
+                resolve(element);
+                clearTimeout(timerId);
+            }, 1);
+        }
+        else {
+            element.src = path;
+            element.addEventListener('load', () => {
+                resolve(element);
+            });
+            element.addEventListener('error', () => {
+                reject(element);
+            });
+        }
+        head.appendChild(element);
+    });
+}
 const script = {
     import(paths) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -44,13 +80,7 @@ const script = {
                 map = scriptMaps[path] = scriptMaps[path] || {};
                 if (!map.promise) {
                     map.path = path;
-                    map.promise = new Promise((resolve) => {
-                        const scriptElement = document.createElement('script');
-                        scriptElement.setAttribute('type', 'text/javascript');
-                        scriptElement.src = path;
-                        scriptElement.addEventListener('load', resolve);
-                        head.appendChild(scriptElement);
-                    });
+                    map.promise = loadFile('script', path, { type: 'text/javascript' });
                 }
                 loadPromises.push(map.promise);
             });
@@ -60,16 +90,13 @@ const script = {
     unload(paths) {
         return __awaiter(this, void 0, void 0, function* () {
             let file;
-            return new Promise((resolve) => {
-                paths = ensurePathArray(paths);
-                paths.forEach((path) => {
-                    file = head.querySelectorAll('script[src="' + path + '"]')[0];
-                    if (file) {
-                        head.removeChild(file);
-                        delete scriptMaps[path];
-                    }
-                });
-                resolve();
+            paths = ensurePathArray(paths);
+            paths.forEach((path) => {
+                file = head.querySelectorAll('script[src="' + path + '"]')[0];
+                if (file) {
+                    head.removeChild(file);
+                    delete scriptMaps[path];
+                }
             });
         });
     }
@@ -78,17 +105,15 @@ const style = {
     import(paths) {
         return __awaiter(this, void 0, void 0, function* () {
             paths = ensurePathArray(paths);
-            paths.forEach((path) => {
+            for (const path of paths) {
                 // TODO: figure out a way to find out when css is guaranteed to be loaded,
                 // and make this return a truely asynchronous promise
                 if (!cssPaths[path]) {
-                    const el = document.createElement('link');
-                    el.setAttribute('rel', 'stylesheet');
-                    el.setAttribute('href', path);
-                    head.appendChild(el);
-                    cssPaths[path] = el;
+                    cssPaths[path] = yield loadFile('link', path, {
+                        rel: 'stylesheet'
+                    });
                 }
-            });
+            }
         });
     },
     unload(paths) {
@@ -109,7 +134,7 @@ const html = {
     import(path, el) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!path) {
-                return Promise.resolve('');
+                throw new Error('No path provided to html.import()');
             }
             const resp = yield fetch(path);
             const contents = yield resp.text();
@@ -117,7 +142,11 @@ const html = {
                 el.innerHTML = contents;
                 return el;
             }
-            return contents;
+            else {
+                const template = document.createElement('template');
+                template.innerHTML = contents;
+                return template.content;
+            }
         });
     }
 };

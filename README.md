@@ -45,7 +45,7 @@ script.import('path/to/file.js').then(function () {
 });
 ```
 
-### Load template files
+### Load HTML files
 
 Load HTML file contents into an already-existing DOM element.
 

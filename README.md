@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/mkay581/dynamic-import.svg?branch=master)](https://travis-ci.org/mkay581/dynamic-import)
 [![npm version](https://badge.fury.io/js/dynamic-import.svg)](https://badge.fury.io/js/dynamic-import)
 
+#### This repository and package is no longer being maintained. We now have a [dynamic import API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import). Please use that instead.
+
 # Dynamic Import
 
 A library that allows you to dynamically load (and unload) scripts, CSS, and HTML templates and files in a browser.  
